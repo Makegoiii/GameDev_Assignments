@@ -11,7 +11,8 @@ reach the exit, survive the corridor of blades and rocks, and beat the boss.
 
 - Level 1 – learning level: coins, gate, exit.
 - Level 2 – long corridor: holes, spinning blades, falling rocks.
-- Level 3 – boss fight: fireballs and bombs from the sky; hit the boss 15 times.
+- Level 3 – enemy arena (Assignment 10): Patroller, Shooter and Charger with their own state machines; beat all three to open the exit. See [`Docs/ENEMIES.md`](Docs/ENEMIES.md).
+- Level 4 – boss fight: fireballs and bombs from the sky; hit the boss 15 times.
 - Win screen.
 
 Full design: [`Docs/GDD.md`](Docs/GDD.md) (PDF: `Docs/GDD.pdf`).
@@ -41,7 +42,7 @@ Pause logic: `Assets/Script/UI/PauseMenu.cs`.
 2. Open `Assets/Main menu.unity` and press Play.
 
 ## Scenes (Build Profiles order)
-0 Main menu · 1 Level1 · 2 Level2 · 3 Level3 (boss) · 4 Win
+0 Main menu · 1 Level1 · 2 Level2 · 3 Level3_Enemies · 4 Level3 (boss) · 5 Win
 
 ## Assets and licenses
 - Character and animations: Mixamo (Adobe), free for games.
@@ -51,4 +52,4 @@ Pause logic: `Assets/Script/UI/PauseMenu.cs`.
 - TextMesh Pro: Unity.
 
 ## AI use
-See [`AI_LOG.txt`](AI_LOG.txt).
+See [`AI_LOG.txt`](AI_LOG.txt) and [`DECISIONS.md`](DECISIONS.md).
