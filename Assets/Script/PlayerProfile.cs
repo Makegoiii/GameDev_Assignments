@@ -1,16 +1,16 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 public class PlayerProfile : MonoBehaviour
 {
+    const string DEFAULT_NAME = "Player";
+
     public TextMeshProUGUI nameText;
 
     void Start()
     {
-        string playerName = PlayerPrefs.GetString("PlayerName", "Player");
-        nameText.text = playerName;
-        int colorIndex = PlayerPrefs.GetInt("PlayerColor", 0);
-}
-
-    public Color[] colors = { Color.red, Color.blue, Color.green };
+        if (nameText == null) return;
+        string playerName = SaveSystem.Data.playerName;
+        nameText.text = string.IsNullOrWhiteSpace(playerName) ? DEFAULT_NAME : playerName;
+    }
 }

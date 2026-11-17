@@ -1,40 +1,40 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
+
 public class ProfileSettings : MonoBehaviour
 {
     public Toggle fullscreenToggle;
-public Toggle musicToggle;
-public AudioSource bgSound;
-
-public void SetFullscreen(bool isOn)
-{
-    Screen.fullScreen = isOn;
-    PlayerPrefs.SetInt("Fullscreen", isOn ? 1 : 0);
-}
-
-public void SetMusic(bool isOn)
-{
-    bgSound.mute = !isOn;
-    PlayerPrefs.SetInt("Music", isOn ? 1 : 0);
-}
+    public Toggle musicToggle;
+    public Slider volumeSlider;
+    public AudioSource bgSound;
     public TMP_InputField nameField;
-
-    public void SaveName(string value)
-    {
-        PlayerPrefs.SetString("PlayerName", value);
-    }
     public TMP_Dropdown colorDropdown;
 
-public void SaveColor(int index)
-{
-    PlayerPrefs.SetInt("PlayerColor", index);
-}
-void Start()
-{
-    nameField.text = PlayerPrefs.GetString("PlayerName", "");
-    colorDropdown.value = PlayerPrefs.GetInt("PlayerColor", 0);
-    fullscreenToggle.isOn = PlayerPrefs.GetInt("Fullscreen", 1) == 1;
-    musicToggle.isOn = PlayerPrefs.GetInt("Music", 1) == 1;
-}
+    void Start()
+    {
+        SaveData d = SaveSystem.Data;
+        if (nameField != null) nameField.SetTextWithoutNotify(d.playerName);
+        if (colorDropdown != null) colorDropdown.SetValueWithoutNotify(d.colorIndex);
+        if (fullscreenToggle != null) fullscreenToggle.SetIsOnWithoutNotify(d.fullscreen);
+        if (musicToggle != null) musicToggle.SetIsOnWithoutNotify(d.musicOn);
+        if (volumeSlider != null) volumeSlider.SetValueWithoutNotify(d.musicVol);
+        SaveSystem.ApplyMusic(bgSound);
+    }
+
+    public void SetFullscreen(bool isOn)
+    {
+        Screen.fullScreen = isOn;
+        SaveSystem.SetFullscreen(isOn);
+    }
+
+    public void SetMusic(bool isOn)
+    {
+        SaveSystem.SetMusicOn(isOn);
+        SaveSystem.ApplyMusic(bgSound);
+    }
+
+    public void SaveName(string value) => SaveSystem.SetPlayerName(value);
+
+    public void SaveColor(int index) => SaveSystem.SetColorIndex(index);
 }

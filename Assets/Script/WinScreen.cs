@@ -1,20 +1,20 @@
+using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class WinScreen : MonoBehaviour
 {
+    [SerializeField] TextMeshProUGUI bestScoreText;
+    [SerializeField] string bestScoreFormat = "Best score: {0}";
+
     void Start()
     {
         Time.timeScale = 1f;
+        SaveSystem.Save();
+        if (bestScoreText != null)
+            bestScoreText.text = string.Format(bestScoreFormat, SaveSystem.Data.bestScore);
     }
 
-    public void ToMenu()
-    {
-        SceneManager.LoadScene(0);
-    }
+    public void ToMenu() => LevelFlow.ToMenu();
 
-    public void PlayAgain()
-    {
-    SceneManager.LoadScene(1);
-    }
+    public void PlayAgain() => LevelFlow.StartLevel(SaveData.FIRST_LEVEL);
 }
