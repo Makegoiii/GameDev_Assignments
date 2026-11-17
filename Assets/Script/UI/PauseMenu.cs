@@ -4,8 +4,6 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    const int MenuSceneIndex = 0;
-
     public GameObject pausePanel;
     public GameObject pauseButton;
     public GameObject[] hideWhilePaused;
@@ -35,11 +33,12 @@ public class PauseMenu : MonoBehaviour
     public void ToMenu()
     {
         SetPaused(false);
-        SceneManager.LoadScene(MenuSceneIndex);
+        LevelFlow.ToMenu();
     }
 
     void SetPaused(bool shouldPause)
     {
+        if (shouldPause) SaveSystem.Save();
         IsPaused = shouldPause;
         Time.timeScale = shouldPause ? 0f : 1f;
         AudioListener.pause = shouldPause;

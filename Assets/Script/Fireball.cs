@@ -2,13 +2,10 @@ using UnityEngine;
 
 public class Fireball : Hazard
 {
-    public float speed = 8f;
-    public int damage = 1;
-
     protected override void Start()
     {
         base.Start();
-        GetComponent<Rigidbody>().linearVelocity = transform.forward * speed;
+        GetComponent<Rigidbody>().linearVelocity = transform.forward * GameConfig.Instance.boss.fireballSpeed;
     }
 
     void OnTriggerEnter(Collider c)
@@ -24,6 +21,6 @@ public class Fireball : Hazard
 
     protected override void OnHitPlayer(Health player)
     {
-        player.TakeDamage(damage);
+        player.TakeDamage(GameConfig.Instance.boss.fireballDamage);
     }
 }

@@ -79,13 +79,13 @@ public static class EnemyLevelSmokeTest
 
     static void LogStates(float t, Movement player)
     {
-        string s = $"[Smoke] t={t:F1} hp={player.GetComponent<Health>()?.hp}";
+        string s = $"[Smoke] t={t:F1} hp={player.GetComponent<Health>()?.Hp}";
         PatrollerEnemy p = Object.FindAnyObjectByType<PatrollerEnemy>();
         ShooterEnemy sh = Object.FindAnyObjectByType<ShooterEnemy>();
-        ChargerEnemy c = Object.FindAnyObjectByType<ChargerEnemy>();
+        RusherEnemy c = Object.FindAnyObjectByType<RusherEnemy>();
         if (p) s += $" Patroller={p.Current}";
         if (sh) s += $" Shooter={sh.Current}";
-        if (c) s += $" Charger={c.Current}";
+        if (c) s += $" Rusher={c.Current}";
         Debug.Log(s);
     }
 

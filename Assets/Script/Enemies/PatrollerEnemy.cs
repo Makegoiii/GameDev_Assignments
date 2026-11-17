@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -6,24 +7,13 @@ public class PatrollerEnemy : MonoBehaviour
 {
     public enum State { Patrol, Chase, WindUp, Cooldown, Search }
 
-    [Header("Route")]
+    [SerializeField] EnemyStats stats;
+
+    [Header("Route (scene waypoints, or set from LevelData)")]
     [SerializeField] Transform[] waypoints;
     [SerializeField] float waypointTolerance = 0.5f;
 
-    [Header("Speed")]
-    [SerializeField] float patrolSpeed = 2f;
-    [SerializeField] float chaseSpeed = 3.6f;
-    [SerializeField] float turnSpeed = 360f;
-
-    [Header("Attack")]
-    [SerializeField] float attackRange = 1.8f;
-    [SerializeField] float hitRange = 2.2f;
-    [SerializeField] float windUpTime = 0.5f;
-    [SerializeField] float cooldownTime = 1.2f;
-    [SerializeField] int damage = 1;
-
-    [Header("Search")]
-    [SerializeField] float searchTime = 3f;
+    Vector3[] route = new Vector3[0];
 
     NavMeshAgent agent;
     EnemySight sight;
@@ -40,9 +30,18 @@ public class PatrollerEnemy : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         sight = GetComponent<EnemySight>();
         telegraph = GetComponent<Telegraph>();
+        if (stats == null) { Debug.LogError(name + ": no EnemyStats"); enabled = false; return; }
+        if (waypoints != null && waypoints.Length > 0)
+            route = System.Array.ConvertAll(waypoints, w => w != null ? w.position : transform.position);
     }
 
     void Start() { Enter(State.Patrol); }
+
+    public void SetRoute(List<Vector3> points)
+    {
+        route = points != null ? points.ToArray() : new Vector3[0];
+        waypointIndex = 0;
+    }
 
     void Update()
     {
@@ -65,9 +64,9 @@ public class PatrollerEnemy : MonoBehaviour
         stateTimer = 0f;
         agent.isStopped = next == State.WindUp || next == State.Cooldown;
 
-        if (next == State.Patrol) { agent.speed = patrolSpeed; GoToWaypoint(); }
-        if (next == State.Chase) agent.speed = chaseSpeed;
-        if (next == State.Search) { agent.speed = patrolSpeed; agent.SetDestination(lastSeenPos); }
+        if (next == State.Patrol) { agent.speed = stats.moveSpeed; GoToWaypoint(); }
+        if (next == State.Chase) agent.speed = stats.attackMoveSpeed;
+        if (next == State.Search) { agent.speed = stats.moveSpeed; agent.SetDestination(lastSeenPos); }
 
         if (telegraph == null) return;
         if (next == State.WindUp) telegraph.StartWarning();
@@ -79,7 +78,7 @@ public class PatrollerEnemy : MonoBehaviour
         if (sight.CanSeePlayer()) { Enter(State.Chase); return; }
         if (!agent.pathPending && agent.remainingDistance <= waypointTolerance)
         {
-            waypointIndex = waypoints.Length == 0 ? 0 : (waypointIndex + 1) % waypoints.Length;
+            waypointIndex = route.Length == 0 ? 0 : (waypointIndex + 1) % route.Length;
             GoToWaypoint();
         }
     }
@@ -90,34 +89,34 @@ public class PatrollerEnemy : MonoBehaviour
         lastSeenPos = sight.Player.position;
         agent.SetDestination(lastSeenPos);
 
-        if (sight.DistanceToPlayer() <= attackRange && sight.IsOnScreen())
+        if (sight.DistanceToPlayer() <= stats.attackRange && sight.IsOnScreen())
             Enter(State.WindUp);
     }
 
     void UpdateWindUp()
     {
-        EnemyMotion.FaceTowards(transform, sight.Player.position, turnSpeed);
-        if (stateTimer < windUpTime) return;
+        EnemyMotion.FaceTowards(transform, sight.Player.position, stats.turnSpeed);
+        if (stateTimer < stats.windUpTime) return;
 
-        if (sight.DistanceToPlayer() <= hitRange)
-            EnemyMotion.HurtPlayer(sight.Player, damage);
+        if (sight.DistanceToPlayer() <= stats.hitRange)
+            EnemyMotion.HurtPlayer(sight.Player, stats.damage);
         Enter(State.Cooldown);
     }
 
     void UpdateCooldown()
     {
-        if (stateTimer >= cooldownTime) Enter(State.Chase);
+        if (stateTimer >= stats.cooldownTime) Enter(State.Chase);
     }
 
     void UpdateSearch()
     {
         if (sight.CanSeePlayer()) { Enter(State.Chase); return; }
-        if (stateTimer >= searchTime) Enter(State.Patrol);
+        if (stateTimer >= stats.searchTime) Enter(State.Patrol);
     }
 
     void GoToWaypoint()
     {
-        if (waypoints == null || waypoints.Length == 0 || waypoints[waypointIndex] == null) return;
-        agent.SetDestination(waypoints[waypointIndex].position);
+        if (route.Length == 0) return;
+        agent.SetDestination(route[waypointIndex % route.Length]);
     }
 }

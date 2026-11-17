@@ -2,10 +2,9 @@ using UnityEngine;
 
 public class Telegraph : MonoBehaviour
 {
-    [SerializeField] Renderer body;
+    [SerializeField] Renderer[] bodies;
     [SerializeField] Color normalColor = Color.white;
     [SerializeField] Color warnColor = Color.red;
-    [SerializeField] Color stunColor = new Color(0.4f, 0.6f, 1f);
     [SerializeField] float blinkSpeed = 14f;
     [SerializeField] AudioClip warnClip;
 
@@ -27,11 +26,6 @@ public class Telegraph : MonoBehaviour
         if (src != null && warnClip != null) src.PlayOneShot(warnClip);
     }
 
-    public void ShowStunned()
-    {
-        blinking = false;
-        SetColor(stunColor);
-    }
 
     public void Clear()
     {
@@ -48,9 +42,13 @@ public class Telegraph : MonoBehaviour
 
     void SetColor(Color c)
     {
-        if (body == null) return;
-        body.GetPropertyBlock(block);
-        block.SetColor(BaseColorId, c);
-        body.SetPropertyBlock(block);
+        if (bodies == null) return;
+        foreach (Renderer r in bodies)
+        {
+            if (r == null) continue;
+            r.GetPropertyBlock(block);
+            block.SetColor(BaseColorId, c);
+            r.SetPropertyBlock(block);
+        }
     }
 }

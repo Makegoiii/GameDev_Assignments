@@ -1,0 +1,149 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c9f9c31ce2b45d79f81458cc0d94006, type: 3}
+  m_Name: Level_02
+  m_EditorClassIdentifier: 
+  levelNumber: 2
+  title: Market
+  timeLimit: 120
+  clearBonus: 400
+  waveDelay: 3
+  playerStart: {x: 0, y: 0.1, z: -9}
+  coins:
+  - {x: -7, y: 1, z: -7}
+  - {x: 7, y: 1, z: -7}
+  - {x: -9, y: 1, z: 0}
+  - {x: 9, y: 1, z: 0}
+  - {x: -2, y: 1, z: -3}
+  - {x: 2, y: 1, z: -3}
+  - {x: 0, y: 1, z: 8}
+  props:
+  - type: 1
+    position: {x: -4, y: 0, z: -1}
+    size: {x: 0.6, y: 2.6, z: 6}
+    yaw: 0
+  - type: 1
+    position: {x: 4, y: 0, z: -1}
+    size: {x: 0.6, y: 2.6, z: 6}
+    yaw: 0
+  - type: 0
+    position: {x: -8, y: 0, z: -6}
+    size: {x: 1.4, y: 1.4, z: 1.4}
+    yaw: 0
+  - type: 0
+    position: {x: -8, y: 1.4, z: -6}
+    size: {x: 1.1, y: 1.1, z: 1.1}
+    yaw: 20
+  - type: 0
+    position: {x: 8, y: 0, z: -6}
+    size: {x: 1.4, y: 1.4, z: 1.4}
+    yaw: 25
+  - type: 0
+    position: {x: 8, y: 1.4, z: -6}
+    size: {x: 1.1, y: 1.1, z: 1.1}
+    yaw: 45
+  - type: 0
+    position: {x: -8, y: 0, z: 6}
+    size: {x: 1.4, y: 1.4, z: 1.4}
+    yaw: 10
+  - type: 0
+    position: {x: -8, y: 1.4, z: 6}
+    size: {x: 1.1, y: 1.1, z: 1.1}
+    yaw: 30
+  - type: 0
+    position: {x: 8, y: 0, z: 6}
+    size: {x: 1.4, y: 1.4, z: 1.4}
+    yaw: 0
+  - type: 0
+    position: {x: 8, y: 1.4, z: 6}
+    size: {x: 1.1, y: 1.1, z: 1.1}
+    yaw: 20
+  - type: 2
+    position: {x: -2.2, y: 0, z: 6}
+    size: {x: 0.9, y: 1.2, z: 0.9}
+    yaw: 0
+  - type: 2
+    position: {x: 2.2, y: 0, z: 6}
+    size: {x: 0.9, y: 1.2, z: 0.9}
+    yaw: 0
+  - type: 3
+    position: {x: 0, y: 0, z: -0.6}
+    size: {x: 2.6, y: 0.9, z: 0.7}
+    yaw: 0
+  - type: 3
+    position: {x: -1.6, y: 0, z: 0.9}
+    size: {x: 2, y: 0.9, z: 0.7}
+    yaw: 90
+  - type: 3
+    position: {x: 1.6, y: 0, z: 0.9}
+    size: {x: 2, y: 0.9, z: 0.7}
+    yaw: 90
+  theme:
+    sunColor: {r: 1, g: 0.85, b: 0.65, a: 1}
+    sunIntensity: 1.2
+    ambientColor: {r: 0.6, g: 0.5, b: 0.4, a: 1}
+    fog: 1
+    fogColor: {r: 0.9, g: 0.75, b: 0.55, a: 1}
+    fogDensity: 0.018
+  waves:
+  - spawns:
+    - type: 0
+      position: {x: -9, y: 0, z: -3}
+      yaw: 90
+      route:
+      - {x: -9, y: 0, z: -3}
+      - {x: -9, y: 0, z: 4}
+      - {x: -6, y: 0, z: 8}
+    - type: 0
+      position: {x: 9, y: 0, z: -3}
+      yaw: 270
+      route:
+      - {x: 9, y: 0, z: -3}
+      - {x: 9, y: 0, z: 4}
+      - {x: 6, y: 0, z: 8}
+    - type: 1
+      position: {x: 0, y: 0, z: 1}
+      yaw: 180
+      route: []
+  - spawns:
+    - type: 2
+      position: {x: -6, y: 0, z: 8}
+      yaw: 135
+      route: []
+    - type: 2
+      position: {x: 6, y: 0, z: 8}
+      yaw: 225
+      route: []
+    - type: 1
+      position: {x: 0, y: 0, z: 1}
+      yaw: 180
+      route: []
+    - type: 0
+      position: {x: 0, y: 0, z: -6}
+      yaw: 0
+      route:
+      - {x: -2, y: 0, z: -6}
+      - {x: 2, y: 0, z: -6}
+  hazards:
+    enabled: 1
+    startDelay: 5
+    interval: 2.2
+    minInterval: 1
+    rampEvery: 15
+    rampFactor: 0.9
+    center: {x: 0, y: 0, z: 0}
+    rangeX: 8
+    rangeZ: 8
+    height: 8
+    rockWeight: 4
+    bombWeight: 0
+    heartWeight: 1

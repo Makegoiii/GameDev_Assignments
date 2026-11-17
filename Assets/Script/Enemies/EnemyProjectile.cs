@@ -3,12 +3,11 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class EnemyProjectile : MonoBehaviour
 {
-    [SerializeField] float speed = 9f;
-    [SerializeField] int damage = 1;
-    [SerializeField] float lifeTime = 4f;
+    int damage;
 
-    void Start()
+    public void Launch(float speed, int hitDamage, float lifeTime)
     {
+        damage = hitDamage;
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
         rb.linearVelocity = transform.forward * speed;

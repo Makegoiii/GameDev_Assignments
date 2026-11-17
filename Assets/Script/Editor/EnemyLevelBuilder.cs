@@ -14,7 +14,6 @@ public static class EnemyLevelBuilder
     const string TARGET_SCENE = "Assets/Scenes/Level3_Enemies.unity";
     const string NAVMESH_ASSET = EnemyLevelFactory.GEN_FOLDER + "/Level3_Enemies_NavMesh.asset";
     const float WALL_HEIGHT = 2.5f;
-    const float LEVEL_TIME_LIMIT = 180f;
     static readonly Vector3 PLAYER_START = new Vector3(0f, 0.1f, -9f);
 
     [MenuItem("Tools/Assignment 10/Build Enemy Level")]
@@ -109,9 +108,6 @@ public static class EnemyLevelBuilder
         if (player == null) { Debug.LogError("No player (Movement) in Level3"); return null; }
         player.transform.position = PLAYER_START;
         player.transform.rotation = Quaternion.identity;
-        SerializedObject so = new SerializedObject(player);
-        so.FindProperty("timeLimit").floatValue = LEVEL_TIME_LIMIT;
-        so.ApplyModifiedPropertiesWithoutUndo();
         return player;
     }
 
@@ -178,7 +174,7 @@ public static class EnemyLevelBuilder
 
         GameObject patroller = EnemyLevelFactory.MakePatroller(new Vector3(-9f, 0, 1f), points);
         GameObject shooter = EnemyLevelFactory.MakeShooter(new Vector3(0f, 0, 8.5f), projectile);
-        GameObject charger = EnemyLevelFactory.MakeCharger(new Vector3(8f, 0, 8f));
+        GameObject charger = EnemyLevelFactory.MakeRusher(new Vector3(8f, 0, 8f), projectile);
         shooter.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
         charger.transform.rotation = Quaternion.Euler(0f, 225f, 0f);
 

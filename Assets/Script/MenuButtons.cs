@@ -1,51 +1,37 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class MenuButtons : MonoBehaviour
 {
-    public void OpenPanel(GameObject panel)
-{
-    panel.SetActive(true);
-}
-
-public void ClosePanel(GameObject panel)
-{
-    panel.SetActive(false);
-}
     public GameObject settingsPanel;
     public AudioSource bgSound;
 
-    public void Play()
+    void Start()
     {
-        SceneManager.LoadScene(1);
+        SaveSystem.ApplyMusic(bgSound);
     }
 
-    public void LoadLevel(int index)
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(index);
-    }
+    public void OpenPanel(GameObject panel) => panel.SetActive(true);
 
-    public void Settings()
-    {
-        settingsPanel.SetActive(true);
-    }
+    public void ClosePanel(GameObject panel) => panel.SetActive(false);
 
-    public void Back()
-    {
-        settingsPanel.SetActive(false);
-    }
+    public void Play() => LevelFlow.ContinueGame();
+
+    public void LoadLevel(int levelNumber) => LevelFlow.StartLevel(levelNumber);
+
+    public void Settings() => settingsPanel.SetActive(true);
+
+    public void Back() => settingsPanel.SetActive(false);
 
     public void SetVolume(float value)
     {
-        bgSound.volume = value;
+        SaveSystem.SetMusicVolume(value);
+        SaveSystem.ApplyMusic(bgSound);
     }
 
     public void Quit()
     {
+        SaveSystem.Save();
         Application.Quit();
-        Debug.Log("Quitting the game");
 
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;

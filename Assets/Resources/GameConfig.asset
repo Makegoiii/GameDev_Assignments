@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 540117fa944341fabaf04a5651532831, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: 
+  player: {fileID: 11400000, guid: 736ce89946a94717892a00df87895bfd, type: 2}
+  items: {fileID: 11400000, guid: b45ad32b80844d85b564b01a9ec26133, type: 2}
+  boss: {fileID: 11400000, guid: 586ed04bed0845e897029dcebffecaf2, type: 2}
+  levels:
+  - {fileID: 11400000, guid: b9271460f1e9458abbf2108c04b0d1ad, type: 2}
+  - {fileID: 11400000, guid: f011bf16a49b4362818c1eb53a5d8a69, type: 2}
+  - {fileID: 11400000, guid: 70f0c24ef38f448cb0b81bb1499fa669, type: 2}
+  patrollerPrefab: {fileID: 9136314149627736321, guid: 0b24e5fc5377d4ff6a7e73044317de06, type: 3}
+  shooterPrefab: {fileID: 853209946924460970, guid: efca4e6870b8841049956c308dd8a562, type: 3}
+  rusherPrefab: {fileID: 7837539061988960483, guid: 4265579f0a561460ab7421cfff3b906a, type: 3}
+  coinPrefab: {fileID: 3568442301953141859, guid: cfea667bc04eb4b86874310de635b2eb, type: 3}
+  rockPrefab: {fileID: 5337656065281790421, guid: 46f5fbfbbf59e4a7480c2b46627438a6, type: 3}
+  bombPrefab: {fileID: 472695643290721646, guid: bfef7c7c0eb514a47b570dcc39d78deb, type: 3}
+  heartPrefab: {fileID: 1198134009921420095, guid: 4194f79db5d1a48d58b67f6a55aa4c67, type: 3}
+  crateMaterial: {fileID: 2100000, guid: 3705ce2e6c9ce48589749a613125da1a, type: 2}
+  wallMaterial: {fileID: 2100000, guid: ff8ce396e221343cf92fb1c58de18126, type: 2}
+  barrelMaterial: {fileID: 2100000, guid: cee239991387d48fa81ee2ad8cba60b5, type: 2}
+  sandbagMaterial: {fileID: 2100000, guid: 036e4b3f76cce4de090287b886e17b9f, type: 2}
+  menuScene: Main menu
+  levelScene: DataLevel
+  winScene: Win
+  resultScreenTime: 3
+  fallbackTimeLimit: 60
+  survivalGoal: 60
+  legacyRain:
+    enabled: 1
+    startDelay: 1
+    interval: 2
+    minInterval: 0.4
+    rampEvery: 10
+    rampFactor: 0.9
+    center: {x: 0, y: 0, z: 0}
+    rangeX: 8
+    rangeZ: 8
+    height: 6
+    rockWeight: 1
+    bombWeight: 0
+    heartWeight: 0
+  defaults:
+    musicVolume: 0.8
+    musicOn: 1
+    fullscreen: 1
+    playerName: 

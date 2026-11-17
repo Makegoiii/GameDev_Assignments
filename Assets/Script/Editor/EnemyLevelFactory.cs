@@ -5,10 +5,16 @@ using UnityEngine.AI;
 public static class EnemyLevelFactory
 {
     public const string GEN_FOLDER = "Assets/EnemyGen";
+    public const string STATS_FOLDER = "Assets/Data/Enemies";
+    const string PLAYER_PREFAB = "Assets/Prefabs/level/Sphere.prefab";
+    const string HERO_CHILD = "Hero";
 
-    static readonly Color PATROLLER_COLOR = new Color(1f, 0.55f, 0.1f);
-    static readonly Color SHOOTER_COLOR = new Color(0.55f, 0.3f, 0.9f);
-    static readonly Color CHARGER_COLOR = new Color(0.2f, 0.7f, 0.3f);
+    static readonly Color PATROLLER_COLOR = new Color(0.78f, 0.66f, 0.46f);
+    static readonly Color SHOOTER_COLOR = new Color(0.43f, 0.48f, 0.29f);
+    static readonly Color RUSHER_COLOR = new Color(0.36f, 0.28f, 0.21f);
+
+    const float MUZZLE_HEIGHT = 1f;
+    const float MUZZLE_FORWARD = 0.5f;
 
     public static Material MakeMaterial(string name, Color color, bool unlit = false)
     {
@@ -45,117 +51,111 @@ public static class EnemyLevelFactory
 
     public static GameObject MakePatroller(Vector3 pos, Transform[] route)
     {
-        GameObject root = MakeBody("Patroller", pos, PrimitiveType.Capsule, PATROLLER_COLOR, 3, 3.6f);
+        GameObject root = MakeBody("Patroller", pos, PATROLLER_COLOR);
         PatrollerEnemy fsm = root.AddComponent<PatrollerEnemy>();
-        Set(fsm, so => SetArray(so.FindProperty("waypoints"), route));
+        Set(fsm, so =>
+        {
+            SetArray(so.FindProperty("waypoints"), route);
+            so.FindProperty("stats").objectReferenceValue = LoadStats("Patroller");
+        });
         return root;
     }
 
     public static GameObject MakeShooter(Vector3 pos, EnemyProjectile projectile)
     {
-        GameObject root = MakeBody("Shooter", pos, PrimitiveType.Cylinder, SHOOTER_COLOR, 2, 2.5f);
-
-        GameObject gun = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        gun.name = "Gun";
-        Object.DestroyImmediate(gun.GetComponent<Collider>());
-        gun.transform.SetParent(root.transform, false);
-        gun.transform.localPosition = new Vector3(0f, 1.3f, 0.5f);
-        gun.transform.localScale = new Vector3(0.25f, 0.25f, 0.8f);
-        gun.GetComponent<Renderer>().sharedMaterial = MakeMaterial("GunMat", Color.black);
-
-        Transform muzzle = new GameObject("Muzzle").transform;
-        muzzle.SetParent(root.transform, false);
-        muzzle.localPosition = new Vector3(0f, 1.3f, 1f);
-
-        LineRenderer laser = MakeLine(root.transform, "AimLaser", MakeMaterial("LaserMat", Color.red, true), 0.06f);
+        GameObject root = MakeBody("Shooter", pos, SHOOTER_COLOR);
+        Transform muzzle = MakeMuzzle(root.transform);
 
         ShooterEnemy fsm = root.AddComponent<ShooterEnemy>();
         Set(fsm, so =>
         {
+            so.FindProperty("stats").objectReferenceValue = LoadStats("Shooter");
             so.FindProperty("projectilePrefab").objectReferenceValue = projectile;
             so.FindProperty("muzzle").objectReferenceValue = muzzle;
-            so.FindProperty("aimLaser").objectReferenceValue = laser;
         });
         return root;
     }
 
-    public static GameObject MakeCharger(Vector3 pos)
+    public static GameObject MakeRusher(Vector3 pos, EnemyProjectile projectile)
     {
-        GameObject root = MakeBody("Charger", pos, PrimitiveType.Cube, CHARGER_COLOR, 4, 1.8f);
-        Transform body = root.transform.Find("Body");
-        body.localScale = new Vector3(1.4f, 1.2f, 1.6f);
-        body.localPosition = new Vector3(0f, 0.6f, 0f);
-
-        for (int side = -1; side <= 1; side += 2)
+        GameObject root = MakeBody("Rusher", pos, RUSHER_COLOR);
+        Transform muzzle = MakeMuzzle(root.transform);
+        RusherEnemy fsm = root.AddComponent<RusherEnemy>();
+        Set(fsm, so =>
         {
-            GameObject horn = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            horn.name = "Horn";
-            Object.DestroyImmediate(horn.GetComponent<Collider>());
-            horn.transform.SetParent(root.transform, false);
-            horn.transform.localPosition = new Vector3(0.45f * side, 1.1f, 0.9f);
-            horn.transform.localScale = new Vector3(0.15f, 0.15f, 0.6f);
-            horn.GetComponent<Renderer>().sharedMaterial = MakeMaterial("HornWhite", Color.white);
-        }
-        root.AddComponent<ChargerEnemy>();
+            so.FindProperty("stats").objectReferenceValue = LoadStats("Rusher");
+            so.FindProperty("projectilePrefab").objectReferenceValue = projectile;
+            so.FindProperty("muzzle").objectReferenceValue = muzzle;
+        });
         return root;
     }
 
-    static GameObject MakeBody(string name, Vector3 pos, PrimitiveType shape, Color color, int hp, float speed)
+    static Transform MakeMuzzle(Transform root)
     {
+        Transform muzzle = new GameObject("Muzzle").transform;
+        muzzle.SetParent(root, false);
+        muzzle.localPosition = new Vector3(0f, MUZZLE_HEIGHT, MUZZLE_FORWARD);
+        return muzzle;
+    }
+
+    public static EnemyStats LoadStats(string enemyName)
+    {
+        string path = STATS_FOLDER + "/EnemyStats_" + enemyName + ".asset";
+        EnemyStats stats = AssetDatabase.LoadAssetAtPath<EnemyStats>(path);
+        if (stats == null) Debug.LogError("Missing enemy data asset: " + path);
+        return stats;
+    }
+
+    static GameObject MakeBody(string name, Vector3 pos, Color color)
+    {
+        EnemyStats stats = LoadStats(name);
+        GameObject playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(PLAYER_PREFAB);
+        Transform hero = playerPrefab.transform.Find(HERO_CHILD);
+        float scale = playerPrefab.transform.localScale.x;
+        CapsuleCollider playerCol = playerPrefab.GetComponent<CapsuleCollider>();
+
         GameObject root = new GameObject(name);
         root.transform.position = pos;
 
-        GameObject body = GameObject.CreatePrimitive(shape);
+        GameObject body = Object.Instantiate(hero.gameObject, root.transform, false);
         body.name = "Body";
-        Object.DestroyImmediate(body.GetComponent<Collider>());
-        body.transform.SetParent(root.transform, false);
-        body.transform.localPosition = Vector3.up;
-        Renderer bodyRenderer = body.GetComponent<Renderer>();
-        bodyRenderer.sharedMaterial = MakeMaterial(name + "Mat", color);
+        body.transform.localPosition = hero.localPosition * scale;
+        body.transform.localRotation = hero.localRotation;
+        body.transform.localScale = hero.localScale * scale;
+        foreach (Collider c in body.GetComponentsInChildren<Collider>()) Object.DestroyImmediate(c);
+
+        Animator anim = body.GetComponentInChildren<Animator>();
+        if (anim != null) anim.applyRootMotion = false;
+        root.AddComponent<EnemyAnimator>();
 
         CapsuleCollider col = root.AddComponent<CapsuleCollider>();
-        col.center = Vector3.up;
-        col.height = 2f;
-        col.radius = 0.5f;
+        col.center = playerCol.center * scale;
+        col.height = playerCol.height * scale;
+        col.radius = playerCol.radius * scale * 1.5f;
 
         NavMeshAgent agent = root.AddComponent<NavMeshAgent>();
-        agent.speed = speed;
+        if (stats != null) agent.speed = stats.moveSpeed;
         agent.angularSpeed = 360f;
         agent.acceleration = 20f;
-        agent.radius = 0.5f;
-        agent.height = 2f;
+        agent.radius = col.radius;
+        agent.height = col.height;
 
         root.AddComponent<AudioSource>().playOnAwake = false;
 
         EnemySight sight = root.AddComponent<EnemySight>();
-        LineRenderer ray = MakeLine(root.transform, "VisionRay", MakeMaterial("VisionRayMat", Color.yellow, true), 0.04f);
-        Set(sight, so => so.FindProperty("visionRay").objectReferenceValue = ray);
+        Set(sight, so => so.FindProperty("stats").objectReferenceValue = stats);
 
+        Renderer[] renderers = body.GetComponentsInChildren<Renderer>(true);
         Telegraph tel = root.AddComponent<Telegraph>();
         Set(tel, so =>
         {
-            so.FindProperty("body").objectReferenceValue = bodyRenderer;
+            SetArray(so.FindProperty("bodies"), renderers);
             so.FindProperty("normalColor").colorValue = color;
         });
 
         EnemyHealth health = root.AddComponent<EnemyHealth>();
-        Set(health, so => so.FindProperty("maxHp").intValue = hp);
+        Set(health, so => so.FindProperty("stats").objectReferenceValue = stats);
         return root;
-    }
-
-    static LineRenderer MakeLine(Transform parent, string name, Material mat, float width)
-    {
-        GameObject go = new GameObject(name);
-        go.transform.SetParent(parent, false);
-        LineRenderer lr = go.AddComponent<LineRenderer>();
-        lr.useWorldSpace = true;
-        lr.positionCount = 2;
-        lr.startWidth = width;
-        lr.endWidth = width;
-        lr.sharedMaterial = mat;
-        lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        lr.enabled = false;
-        return lr;
     }
 
     static void Set(Object target, System.Action<SerializedObject> edit)

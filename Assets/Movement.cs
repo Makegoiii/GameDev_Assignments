@@ -6,12 +6,6 @@ using UnityEngine.EventSystems;
 
 public class Movement : MonoBehaviour
 {
-    public float speed = 6f;
-    public float turnSpeed = 12f;
-    public float jumpImpulse = 6f;
-    public float airControl = 0.3f;
-    public float timeLimit = 60f;
-
     public Transform feet;
     public float groundRadius = 0.2f;
     public LayerMask groundMask;
@@ -34,17 +28,20 @@ public class Movement : MonoBehaviour
     private bool grounded = false;
     private float timeLeft;
     private bool gameOver = false;
-    private Transform cam;
 
     private Vector2 move;
     private bool fireRequested;
     private Shooter shooter;
+    private PlayerStats stats;
+
+    public int CoinsCollected => coinsCollected;
+    public float TimeLeft => timeLeft;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        cam = Camera.main.transform;
         shooter = GetComponent<Shooter>();
+        stats = GameConfig.Instance.player;
     }
 
     void Start()
@@ -52,16 +49,14 @@ public class Movement : MonoBehaviour
         totalCoins = GameObject.FindGameObjectsWithTag("Coin").Length;
         Debug.Log("Coins in this level: " + totalCoins);
 
-        timeLeft = timeLimit;
+        LevelRunner runner = LevelRunner.Active;
+        timeLeft = runner != null && runner.Level != null
+            ? runner.Level.timeLimit
+            : GameConfig.Instance.fallbackTimeLimit;
         winPanel.text = "";
         ShowCoins();
 
-        bool musicOn = PlayerPrefs.GetInt("Music", 1) == 1;
-        if (bgMusic != null)
-        {
-            bgMusic.mute = !musicOn;
-            bgMusic.volume = PlayerPrefs.GetFloat("Volume", 1f);
-        }
+        SaveSystem.ApplyMusic(bgMusic);
     }
 
     public void OnMove(InputValue value)
@@ -78,7 +73,7 @@ public class Movement : MonoBehaviour
             Vector3 v = rb.linearVelocity;
             v.y = 0f;
             rb.linearVelocity = v;
-            rb.AddForce(Vector3.up * jumpImpulse, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * stats.jumpImpulse, ForceMode.Impulse);
         }
     }
 
@@ -88,17 +83,11 @@ public class Movement : MonoBehaviour
         fireRequested = true;
     }
 
-    Vector3 GetMoveDir()
+    Vector3 Facing()
     {
-        Vector3 forward = cam.forward;
-        forward.y = 0f;
-        forward.Normalize();
-
-        Vector3 right = cam.right;
-        right.y = 0f;
-        right.Normalize();
-
-        return Vector3.ClampMagnitude(forward * move.y + right * move.x, 1f);
+        Vector3 f = rb.rotation * Vector3.forward;
+        f.y = 0f;
+        return f.normalized;
     }
 
     void Update()
@@ -117,6 +106,7 @@ public class Movement : MonoBehaviour
         {
             timeLeft = 0;
             EndGame("Время вышло!");
+            Invoke(nameof(Restart), stats.gameOverDelay);
         }
         timerText.text = "Время: " + Mathf.CeilToInt(timeLeft);
 
@@ -133,9 +123,9 @@ public class Movement : MonoBehaviour
         fireRequested = false;
 
         if (shooter != null && (fireHeld || clickShot))
-            shooter.Shoot(transform.forward);
+            shooter.Shoot(Facing());
 
-        if (transform.position.y < -10f)
+        if (transform.position.y < stats.fallKillY)
             Restart();
     }
 
@@ -143,19 +133,17 @@ public class Movement : MonoBehaviour
     {
         if (gameOver) return;
 
-        Vector3 dir = GetMoveDir();
+        float turn = move.x * stats.turnSpeed * Time.fixedDeltaTime;
+        if (turn != 0f)
+            rb.MoveRotation(rb.rotation * Quaternion.Euler(0f, turn, 0f));
 
-        Vector3 target = dir * speed;
+        float forwardInput = Mathf.Clamp(move.y, -1f, 1f);
+        float speed = forwardInput >= 0f ? stats.moveSpeed : stats.moveSpeed * stats.backwardSpeedFactor;
+        Vector3 target = Facing() * forwardInput * speed;
         Vector3 current = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-        Vector3 horizontal = Vector3.Lerp(current, target, grounded ? 1f : airControl);
+        Vector3 horizontal = Vector3.Lerp(current, target, grounded ? 1f : stats.airControl);
 
         rb.linearVelocity = new Vector3(horizontal.x, rb.linearVelocity.y, horizontal.z);
-
-        if (dir.sqrMagnitude > 0.01f)
-        {
-            Quaternion look = Quaternion.LookRotation(dir);
-            rb.MoveRotation(Quaternion.Slerp(rb.rotation, look, turnSpeed * Time.fixedDeltaTime));
-        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -179,12 +167,12 @@ public class Movement : MonoBehaviour
         {
             if (coinsCollected >= totalCoins)
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+                if (LevelRunner.Active != null) LevelRunner.Active.OnExitReached();
+                else SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             }
             else
             {
-                if (messageRoutine != null) StopCoroutine(messageRoutine);
-                messageRoutine = StartCoroutine(ShowMessage("Сначала соберите все монеты!"));
+                ShowMessage("Сначала соберите все монеты!");
             }
         }
     }
@@ -202,7 +190,7 @@ public class Movement : MonoBehaviour
         gameOver = true;
         winPanel.text = "Game Over!";
         StopPlayer();
-        Invoke(nameof(Restart), 2f);
+        Invoke(nameof(Restart), stats.gameOverDelay);
     }
 
     void EndGame(string message)
@@ -229,7 +217,20 @@ public class Movement : MonoBehaviour
         coinText.text = "Монеты: " + coinsCollected + " / " + totalCoins;
     }
 
-    System.Collections.IEnumerator ShowMessage(string message)
+    public void ShowMessage(string message)
+    {
+        if (gameOver) return;
+        if (messageRoutine != null) StopCoroutine(messageRoutine);
+        messageRoutine = StartCoroutine(MessageRoutine(message));
+    }
+
+    public void ShowResult(string message)
+    {
+        if (messageRoutine != null) StopCoroutine(messageRoutine);
+        EndGame(message);
+    }
+
+    System.Collections.IEnumerator MessageRoutine(string message)
     {
         winPanel.text = message;
         yield return new WaitForSeconds(messageTime);
@@ -240,7 +241,7 @@ public class Movement : MonoBehaviour
 
     public void GoToMenu()
     {
-        SceneManager.LoadScene(0);
+        LevelFlow.ToMenu();
     }
 
     void OnDrawGizmosSelected()
