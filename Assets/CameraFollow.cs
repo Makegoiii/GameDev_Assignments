@@ -5,39 +5,27 @@ public class CameraFollow : MonoBehaviour
     public Transform target;
     public float distance = 6f;
     public float height = 3f;
-    public float turnSmooth = 3f;
+    public float turnSmooth = 6f;
     public float smooth = 8f;
-    public float minSpeed = 1f;
-    private Rigidbody targetRb;
+    public float lookHeight = 0.5f;
+
     private float yaw;
 
     void Start()
     {
-        yaw = transform.eulerAngles.y;
-        if (target != null)
-            targetRb = target.GetComponent<Rigidbody>();
+        yaw = target != null ? target.eulerAngles.y : transform.eulerAngles.y;
     }
 
     void LateUpdate()
     {
-        if (target == null || targetRb == null) return;
+        if (target == null) return;
 
-        Vector3 v = targetRb.linearVelocity;
-        v.y = 0f;
-
-        if (v.magnitude > minSpeed)
-        {
-            float moveYaw = Mathf.Atan2(v.x, v.z) * Mathf.Rad2Deg;
-            float diff = Mathf.DeltaAngle(yaw, moveYaw);
-
-            if (Mathf.Abs(diff) < 120f)
-            yaw = Mathf.MoveTowardsAngle(yaw, moveYaw, 45f * Time.deltaTime);
-             }
+        yaw = Mathf.LerpAngle(yaw, target.eulerAngles.y, turnSmooth * Time.deltaTime);
 
         Quaternion rot = Quaternion.Euler(0f, yaw, 0f);
         Vector3 wanted = target.position - rot * Vector3.forward * distance + Vector3.up * height;
 
         transform.position = Vector3.Lerp(transform.position, wanted, smooth * Time.deltaTime);
-        transform.LookAt(target.position + Vector3.up * 0.5f);
+        transform.LookAt(target.position + Vector3.up * lookHeight);
     }
 }

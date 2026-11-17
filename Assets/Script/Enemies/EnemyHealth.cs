@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    [SerializeField] int maxHp = 3;
+    [SerializeField] EnemyStats stats;
     [SerializeField] float hitFlashTime = 0.08f;
     [SerializeField] AudioClip hitClip;
 
@@ -15,11 +15,11 @@ public class EnemyHealth : MonoBehaviour
     Renderer[] rends;
 
     public bool IsDead => dead;
-    public float DamageMultiplier { get; set; } = 1f;
 
     void Awake()
     {
-        hp = maxHp;
+        if (stats == null) Debug.LogError(name + ": no EnemyStats");
+        hp = stats != null ? stats.maxHp : 1;
         rends = GetComponentsInChildren<Renderer>();
     }
 
@@ -28,9 +28,10 @@ public class EnemyHealth : MonoBehaviour
 
     void CheckBullet(GameObject obj)
     {
-        if (dead || obj.GetComponent<Bullet>() == null) return;
+        Bullet bullet = obj.GetComponent<Bullet>();
+        if (dead || bullet == null) return;
         Destroy(obj);
-        TakeDamage(Mathf.Max(1, Mathf.RoundToInt(DamageMultiplier)));
+        TakeDamage(bullet.Damage);
     }
 
     public void TakeDamage(int dmg)

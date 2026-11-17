@@ -3,12 +3,10 @@ using UnityEngine;
 public class Shooter : MonoBehaviour
 {
     public Bullet bulletPrefab;
-    public float cooldown = 0.3f;
     public float muzzleDistance = 1f;
     public float muzzleHeight = 0.5f;
+    public float enemyAimHeight = 1f;
     public AudioClip shootClip;
-
-    public bool useMovementDirection = true;
 
     float nextShot;
     AudioSource src;
@@ -18,21 +16,43 @@ public class Shooter : MonoBehaviour
         src = GetComponent<AudioSource>();
     }
 
-    public void Shoot(Vector3 moveDir)
+    public void Shoot(Vector3 facing)
     {
         if (Time.time < nextShot) return;
+        PlayerStats stats = GameConfig.Instance.player;
+        nextShot = Time.time + stats.shootCooldown;
 
-        Vector3 aimDir = useMovementDirection ? moveDir : transform.forward;
-        aimDir.y = 0f;
-        if (aimDir.sqrMagnitude < 0.0001f) aimDir = Vector3.forward;
-        aimDir.Normalize();
+        facing.y = 0f;
+        if (facing.sqrMagnitude < 0.0001f) facing = transform.forward;
+        facing.Normalize();
 
-        nextShot = Time.time + cooldown;
+        Vector3 muzzle = transform.position + facing * muzzleDistance + Vector3.up * muzzleHeight;
+        Vector3 aimDir = AimAssist(muzzle, facing, stats);
 
-        Vector3 pos = transform.position + aimDir * muzzleDistance + Vector3.up * muzzleHeight;
-        Bullet b = Instantiate(bulletPrefab, pos, Quaternion.LookRotation(aimDir));
+        Bullet b = Instantiate(bulletPrefab, muzzle, Quaternion.LookRotation(aimDir));
         b.Launch(aimDir);
 
         if (src != null && shootClip != null) src.PlayOneShot(shootClip);
+    }
+
+    Vector3 AimAssist(Vector3 muzzle, Vector3 facing, PlayerStats stats)
+    {
+        Vector3 best = facing;
+        float bestAngle = stats.aimAssistAngle;
+
+        foreach (EnemyHealth enemy in FindObjectsByType<EnemyHealth>())
+        {
+            if (enemy.IsDead) continue;
+            Vector3 to = enemy.transform.position + Vector3.up * enemyAimHeight - muzzle;
+            Vector3 flat = new Vector3(to.x, 0f, to.z);
+            if (flat.magnitude > stats.aimAssistRange) continue;
+
+            float angle = Vector3.Angle(facing, flat);
+            if (angle > bestAngle) continue;
+
+            bestAngle = angle;
+            best = to.normalized;
+        }
+        return best;
     }
 }
