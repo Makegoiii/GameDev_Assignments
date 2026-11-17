@@ -21,16 +21,15 @@ public class GameHUD : MonoBehaviour
 
         for (int i = 0; i < hearts.Length; i++)
         {
-            bool exists = i < health.maxHp;
+            bool exists = i < health.MaxHp;
             hearts[i].gameObject.SetActive(exists);
             if (exists)
-                hearts[i].color = i < health.hp ? fullColor : emptyColor;
+                hearts[i].color = i < health.Hp ? fullColor : emptyColor;
         }
     }
 
     public void ToMenu()
     {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(0);
+        LevelFlow.ToMenu();
     }
 }

@@ -4,19 +4,20 @@ using UnityEngine.SceneManagement;
 
 public class Health : MonoBehaviour
 {
-    public int maxHp = 3;
-    public int hp = 3;
+    public int MaxHp => GameConfig.Instance.player.maxHp;
+    public int Hp => hp;
 
     public AudioClip hurtClip;
     public AudioClip healClip;
 
+    int hp;
     bool invincible;
     Renderer[] renderers;
     AudioSource src;
 
     void Start()
     {
-        hp = maxHp;
+        hp = MaxHp;
         renderers = GetComponentsInChildren<Renderer>();
         src = GetComponent<AudioSource>();
         Debug.Log("HP: " + hp);
@@ -40,7 +41,7 @@ public class Health : MonoBehaviour
 
     public void Heal(int amount)
     {
-        hp = Mathf.Min(hp + amount, maxHp);
+        hp = Mathf.Min(hp + amount, MaxHp);
         Debug.Log("HEAL! HP: " + hp);
         if (src != null && healClip != null) src.PlayOneShot(healClip);
     }
@@ -48,10 +49,14 @@ public class Health : MonoBehaviour
     IEnumerator Invincibility()
     {
         invincible = true;
-        for (int i = 0; i < 10; i++)
+        PlayerStats stats = GameConfig.Instance.player;
+        float end = Time.time + stats.invincibleTime;
+        bool visible = true;
+        while (Time.time < end)
         {
-            SetVisible(i % 2 == 1);
-            yield return new WaitForSeconds(0.2f);
+            visible = !visible;
+            SetVisible(visible);
+            yield return new WaitForSeconds(stats.invincibleBlink);
         }
         SetVisible(true);
         invincible = false;

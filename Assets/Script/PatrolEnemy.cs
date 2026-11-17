@@ -4,7 +4,7 @@ public class PatrolEnemy : MonoBehaviour
 {
     public Transform pointA;
     public Transform pointB;
-    public float speed = 3f;
+    const float ARRIVE_DISTANCE = 0.1f;
     public bool faceDirection = false;
 
     Transform target;
@@ -19,7 +19,7 @@ public class PatrolEnemy : MonoBehaviour
         if (pointA == null || pointB == null) return;
 
         transform.position = Vector3.MoveTowards(
-            transform.position, target.position, speed * Time.deltaTime);
+            transform.position, target.position, GameConfig.Instance.items.movingObstacleSpeed * Time.deltaTime);
 
         if (faceDirection)
         {
@@ -29,7 +29,7 @@ public class PatrolEnemy : MonoBehaviour
                 transform.LookAt(look);
         }
 
-        if (Vector3.Distance(transform.position, target.position) < 0.1f)
+        if (Vector3.Distance(transform.position, target.position) < ARRIVE_DISTANCE)
             target = (target == pointA) ? pointB : pointA;
     }
 }

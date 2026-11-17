@@ -2,11 +2,9 @@ using UnityEngine;
 
 public class BombHazard : Hazard
 {
-    public float fuse = 2f;
     public GameObject explosionPrefab;
     public AudioClip explodeClip;
-    public float blastRadius = 0f;
-    public int blastDamage = 2;
+    public float explosionFxTime = 3f;
 
     bool armed;
 
@@ -22,25 +20,25 @@ public class BombHazard : Hazard
         if (!armed)
         {
             armed = true;
-            Invoke(nameof(Explode), fuse);
+            Invoke(nameof(Explode), Items.bombFuse);
         }
     }
 
     protected override void OnHitPlayer(Health player)
     {
-        player.TakeDamage(2);
+        player.TakeDamage(Items.bombHitDamage);
     }
 
     void Explode()
     {
-        if (blastRadius > 0f)
+        if (Items.bombBlastRadius > 0f)
         {
-            Collider[] hits = Physics.OverlapSphere(transform.position, blastRadius);
+            Collider[] hits = Physics.OverlapSphere(transform.position, Items.bombBlastRadius);
             foreach (Collider col in hits)
             {
                 if (!col.CompareTag("Player")) continue;
                 Health h = col.GetComponentInParent<Health>();
-                if (h != null) { h.TakeDamage(blastDamage); break; }
+                if (h != null) { h.TakeDamage(Items.bombBlastDamage); break; }
             }
         }
         PlayFx();
@@ -52,7 +50,7 @@ public class BombHazard : Hazard
         if (explosionPrefab != null)
         {
             GameObject fx = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-            Destroy(fx, 3f);
+            Destroy(fx, explosionFxTime);
         }
         if (explodeClip != null)
             AudioSource.PlayClipAtPoint(explodeClip, transform.position);

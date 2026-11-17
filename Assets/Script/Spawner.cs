@@ -3,16 +3,12 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     public Hazard[] prefabs;
-    public float firstDelay = 1f;
-    public float interval = 2f;
 
-    public float rangeX = 8f;
-    public float rangeZ = 8f;
-    public float spawnHeight = 6f;
+    HazardRainSettings Rain => GameConfig.Instance.legacyRain;
 
     void Start()
     {
-        InvokeRepeating(nameof(Spawn), firstDelay, interval);
+        InvokeRepeating(nameof(Spawn), Rain.startDelay, Rain.interval);
     }
 
     void Spawn()
@@ -20,9 +16,9 @@ public class Spawner : MonoBehaviour
         Hazard pick = prefabs[Random.Range(0, prefabs.Length)];
 
         Vector3 pos = new Vector3(
-            transform.position.x + Random.Range(-rangeX, rangeX),
-            spawnHeight,
-            transform.position.z + Random.Range(-rangeZ, rangeZ));
+            transform.position.x + Random.Range(-Rain.rangeX, Rain.rangeX),
+            Rain.height,
+            transform.position.z + Random.Range(-Rain.rangeZ, Rain.rangeZ));
 
         Instantiate(pick, pos, Quaternion.identity);
     }

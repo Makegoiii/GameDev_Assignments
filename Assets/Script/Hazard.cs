@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class Hazard : MonoBehaviour
 {
-    public float lifeTime = 15f;
+    protected static ItemValues Items => GameConfig.Instance.items;
 
     protected virtual void Start()
     {
-        Destroy(gameObject, lifeTime);
+        Destroy(gameObject, Items.hazardLifetime);
     }
 
     protected virtual void OnCollisionEnter(Collision c)
@@ -22,6 +22,6 @@ public class Hazard : MonoBehaviour
 
     protected virtual void OnHitPlayer(Health player)
     {
-        player.TakeDamage(1);
+        player.TakeDamage(Items.rockDamage);
     }
 }
