@@ -63,6 +63,7 @@ public static class SaveSystem
         d.version = SaveData.CURRENT_VERSION;
         d.bestScore = Mathf.Max(0, d.bestScore);
         d.musicVol = Mathf.Clamp01(d.musicVol);
+        d.sfxVol = Mathf.Clamp01(d.sfxVol);
         d.colorIndex = Mathf.Max(0, d.colorIndex);
         d.playerName ??= "";
 
@@ -136,6 +137,7 @@ public static class SaveSystem
         SaveData old = Data;
         SaveData fresh = SaveData.CreateDefault(Defaults);
         fresh.musicVol = old.musicVol;
+        fresh.sfxVol = old.sfxVol;
         fresh.musicOn = old.musicOn;
         fresh.fullscreen = old.fullscreen;
         fresh.playerName = old.playerName;
@@ -147,6 +149,7 @@ public static class SaveSystem
     }
 
     public static void SetMusicVolume(float v) => ChangeSetting(d => d.musicVol = Mathf.Clamp01(v));
+    public static void SetSfxVolume(float v) => ChangeSetting(d => d.sfxVol = Mathf.Clamp01(v));
     public static void SetMusicOn(bool on) => ChangeSetting(d => d.musicOn = on);
     public static void SetFullscreen(bool on) => ChangeSetting(d => d.fullscreen = on);
     public static void SetPlayerName(string n) => ChangeSetting(d => d.playerName = n ?? "");
@@ -157,13 +160,6 @@ public static class SaveSystem
         change(Data);
         Save();
         Changed?.Invoke();
-    }
-
-    public static void ApplyMusic(AudioSource music)
-    {
-        if (music == null) return;
-        music.mute = !Data.musicOn;
-        music.volume = Data.musicVol;
     }
 
 #if UNITY_EDITOR

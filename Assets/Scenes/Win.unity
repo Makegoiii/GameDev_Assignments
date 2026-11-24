@@ -3525,6 +3525,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 353b176ed93a844c9bb9ef35d5edf262, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WinScreen
+  bestScoreText: {fileID: 0}
+  bestScoreFormat: 'Best score: {0}'
 --- !u!114 &1352121323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3635,7 +3637,7 @@ AudioSource:
   m_GameObject: {fileID: 1779529491}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 7250775612263323390, guid: 4fcff7ff11d384d73b223d4f83f14083, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: d5c45c5340fda46eeb105ba8d8efcb0b, type: 3}
   m_PlayOnAwake: 1

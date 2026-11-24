@@ -6,26 +6,27 @@ public class Telegraph : MonoBehaviour
     [SerializeField] Color normalColor = Color.white;
     [SerializeField] Color warnColor = Color.red;
     [SerializeField] float blinkSpeed = 14f;
-    [SerializeField] AudioClip warnClip;
+    [SerializeField] float warnSoundInterval = 1.5f;
 
     static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
     MaterialPropertyBlock block;
-    AudioSource src;
     bool blinking;
+    float lastWarnSound = float.NegativeInfinity;
 
     void Awake()
     {
         block = new MaterialPropertyBlock();
-        src = GetComponent<AudioSource>();
         SetColor(normalColor);
     }
 
     public void StartWarning()
     {
+        if (blinking) return;
         blinking = true;
-        if (src != null && warnClip != null) src.PlayOneShot(warnClip);
+        if (Time.time - lastWarnSound < warnSoundInterval) return;
+        lastWarnSound = Time.time;
+        Sfx.PlayAt(SoundEvent.EnemyWindUp, transform.position);
     }
-
 
     public void Clear()
     {

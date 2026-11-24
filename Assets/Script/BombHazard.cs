@@ -3,7 +3,6 @@ using UnityEngine;
 public class BombHazard : Hazard
 {
     public GameObject explosionPrefab;
-    public AudioClip explodeClip;
     public float explosionFxTime = 3f;
 
     bool armed;
@@ -52,7 +51,6 @@ public class BombHazard : Hazard
             GameObject fx = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
             Destroy(fx, explosionFxTime);
         }
-        if (explodeClip != null)
-            AudioSource.PlayClipAtPoint(explodeClip, transform.position);
+        Sfx.PlayAt(SoundEvent.Explosion, transform.position);
     }
 }

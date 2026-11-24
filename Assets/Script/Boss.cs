@@ -19,7 +19,6 @@ public class Boss : MonoBehaviour
     public GameObject fireballPrefab;
 
     [Header("Баптау")]
-    public AudioClip hitClip;
 
     int hp;
     bool dead;
@@ -60,7 +59,7 @@ public class Boss : MonoBehaviour
 
         hp -= dmg;
         UpdateBar();
-        if (hitClip) AudioSource.PlayClipAtPoint(hitClip, transform.position);
+        Sfx.PlayAt(SoundEvent.Hit, transform.position);
 
         if (hp <= 0)
         {

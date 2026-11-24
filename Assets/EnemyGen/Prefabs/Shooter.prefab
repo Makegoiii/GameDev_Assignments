@@ -452,7 +452,7 @@ AudioSource:
   m_GameObject: {fileID: 853209946924460970}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 7250775612263323390, guid: 4fcff7ff11d384d73b223d4f83f14083, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
@@ -575,7 +575,6 @@ MonoBehaviour:
   normalColor: {r: 0.43, g: 0.48, b: 0.29, a: 1}
   warnColor: {r: 1, g: 0, b: 0, a: 1}
   blinkSpeed: 14
-  warnClip: {fileID: 0}
 --- !u!114 &2331871462669444217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -590,7 +589,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   stats: {fileID: 11400000, guid: c033ea712b7d4d21bb114272194cbd6c, type: 2}
   hitFlashTime: 0.08
-  hitClip: {fileID: 0}
 --- !u!114 &4915981675798785153
 MonoBehaviour:
   m_ObjectHideFlags: 0

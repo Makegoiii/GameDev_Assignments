@@ -41,7 +41,7 @@ public class PauseMenu : MonoBehaviour
         if (shouldPause) SaveSystem.Save();
         IsPaused = shouldPause;
         Time.timeScale = shouldPause ? 0f : 1f;
-        AudioListener.pause = shouldPause;
+        if (AudioManager.Instance != null) AudioManager.Instance.SetPaused(shouldPause);
 
         if (pausePanel != null) pausePanel.SetActive(shouldPause);
         if (pauseButton != null) pauseButton.SetActive(!shouldPause);
@@ -54,6 +54,5 @@ public class PauseMenu : MonoBehaviour
     {
         IsPaused = false;
         Time.timeScale = 1f;
-        AudioListener.pause = false;
     }
 }

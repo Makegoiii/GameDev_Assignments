@@ -118,11 +118,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ce88a22586f7497499e732e9c1488d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Movement
-  speed: 6
-  turnSpeed: 12
-  jumpImpulse: 6
-  airControl: 0.3
-  timeLimit: 60
   feet: {fileID: 9034170140356427203}
   groundRadius: 0.2
   groundMask:
@@ -133,9 +128,6 @@ MonoBehaviour:
   coinText: {fileID: 0}
   winPanel: {fileID: 0}
   timerText: {fileID: 0}
-  audioSource: {fileID: 2064142409342823785}
-  coinSound: {fileID: 8300000, guid: 34f77207976ba40508b4cf089174ad77, type: 3}
-  bgMusic: {fileID: 2064142409342823785}
   messageTime: 2
 --- !u!54 &6961687461318924228
 Rigidbody:
@@ -173,7 +165,7 @@ AudioSource:
   m_GameObject: {fileID: 9086560054366871120}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 7250775612263323390, guid: 4fcff7ff11d384d73b223d4f83f14083, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 78fe16567f04a4c0a92082a73178bbaa, type: 3}
   m_PlayOnAwake: 1
@@ -274,10 +266,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerProfile
   nameText: {fileID: 0}
-  colors:
-  - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 0, g: 0, b: 1, a: 1}
-  - {r: 0, g: 1, b: 0, a: 1}
 --- !u!114 &6838480008687197702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,11 +279,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Shooter
   bulletPrefab: {fileID: 5564229278942942770, guid: a06aa7fbe16234321b3917c811d23b99, type: 3}
-  cooldown: 0.3
   muzzleDistance: 1
   muzzleHeight: 0.5
-  shootClip: {fileID: 8300000, guid: 833430cba9a4a43ddb11dba24eb64f01, type: 3}
-  useMovementDirection: 1
+  enemyAimHeight: 1
 --- !u!114 &8468379179702031697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,10 +294,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3564ccaa2ed474fb183456b11ca92ad9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHp: 3
-  hp: 3
-  hurtClip: {fileID: 8300000, guid: 42c4a2ffeae1a4571ad0dc3998f6f26a, type: 3}
-  healClip: {fileID: 8300000, guid: d5c45c5340fda46eeb105ba8d8efcb0b, type: 3}
 --- !u!82 &8844544308752587343
 AudioSource:
   m_ObjectHideFlags: 0
@@ -321,7 +303,7 @@ AudioSource:
   m_GameObject: {fileID: 9086560054366871120}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 7250775612263323390, guid: 4fcff7ff11d384d73b223d4f83f14083, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
@@ -452,11 +434,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Shooter
   bulletPrefab: {fileID: 5564229278942942770, guid: a06aa7fbe16234321b3917c811d23b99, type: 3}
-  cooldown: 0.3
   muzzleDistance: 1
   muzzleHeight: 0.5
-  shootClip: {fileID: 0}
-  useMovementDirection: 1
+  enemyAimHeight: 1
 --- !u!136 &2129963853582289529
 CapsuleCollider:
   m_ObjectHideFlags: 0

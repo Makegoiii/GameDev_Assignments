@@ -1,0 +1,142 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2651216538d244559caeafb29589a84, type: 3}
+  m_Name: SoundLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::SoundLibrary
+  mixer: {fileID: 24100000, guid: 4fcff7ff11d384d73b223d4f83f14083, type: 2}
+  musicGroup: {fileID: 165904647632613470, guid: 4fcff7ff11d384d73b223d4f83f14083, type: 2}
+  sfxGroup: {fileID: 7250775612263323390, guid: 4fcff7ff11d384d73b223d4f83f14083, type: 2}
+  musicVolumeParam: MusicVolume
+  sfxVolumeParam: SFXVolume
+  gameplaySnapshot: Gameplay
+  pausedSnapshot: Paused
+  snapshotTransition: 0.3
+  menuMusic: {fileID: 8300000, guid: f07fa116285a54be08866897c4e4f53b, type: 3}
+  levelMusic: {fileID: 8300000, guid: 78fe16567f04a4c0a92082a73178bbaa, type: 3}
+  crossfadeTime: 1
+  musicSourceVolume: 0.55
+  pitchRange: {x: 0.92, y: 1.08}
+  sfxVoices: 16
+  spatialMinDistance: 8
+  spatialMaxDistance: 45
+  sounds:
+  - id: 0
+    clips:
+    - {fileID: 8300000, guid: eed9de6b865f841aebe942774e35e5f3, type: 3}
+    - {fileID: 8300000, guid: e6f477b52219b41e08fea8cacc788449, type: 3}
+    volume: 0.55
+    randomPitch: 1
+    spatialBlend: 0
+    cooldown: 0.05
+  - id: 1
+    clips:
+    - {fileID: 8300000, guid: a77d96e589db649c59b18300016763d0, type: 3}
+    - {fileID: 8300000, guid: 4f76f73dc3d0c4fd1a07834224121cca, type: 3}
+    volume: 0.4
+    randomPitch: 1
+    spatialBlend: 0
+    cooldown: 0.05
+  - id: 2
+    clips:
+    - {fileID: 8300000, guid: faa1ac4570eaf44eb989be642a461180, type: 3}
+    - {fileID: 8300000, guid: 474e623011d034c30bc37a852fbd2de4, type: 3}
+    - {fileID: 8300000, guid: 8409d0ff07b9e4272814d4a054d58b48, type: 3}
+    volume: 0.85
+    randomPitch: 1
+    spatialBlend: 0.4
+    cooldown: 0.03
+  - id: 3
+    clips:
+    - {fileID: 8300000, guid: 8b780d2c376d64441924f48f64c7a078, type: 3}
+    volume: 0.9
+    randomPitch: 1
+    spatialBlend: 0
+    cooldown: 0.1
+  - id: 4
+    clips:
+    - {fileID: 8300000, guid: 34f77207976ba40508b4cf089174ad77, type: 3}
+    - {fileID: 8300000, guid: 0ad650a1e44054be5ad6865a975ef6e4, type: 3}
+    volume: 0.7
+    randomPitch: 1
+    spatialBlend: 0
+    cooldown: 0.06
+  - id: 5
+    clips:
+    - {fileID: 8300000, guid: d5c45c5340fda46eeb105ba8d8efcb0b, type: 3}
+    volume: 0.8
+    randomPitch: 0
+    spatialBlend: 0
+    cooldown: 0
+  - id: 6
+    clips:
+    - {fileID: 8300000, guid: 30af30b682573458e890f06ab2bca986, type: 3}
+    volume: 0.7
+    randomPitch: 1
+    spatialBlend: 0.5
+    cooldown: 0.3
+  - id: 7
+    clips:
+    - {fileID: 8300000, guid: 38f749ee941a04258ba4368f60db4470, type: 3}
+    volume: 0.6
+    randomPitch: 1
+    spatialBlend: 0.5
+    cooldown: 0.03
+  - id: 8
+    clips:
+    - {fileID: 8300000, guid: 833430cba9a4a43ddb11dba24eb64f01, type: 3}
+    volume: 0.9
+    randomPitch: 1
+    spatialBlend: 0.6
+    cooldown: 0.05
+  - id: 9
+    clips:
+    - {fileID: 8300000, guid: 08793bbe2ad334382a760bc94c88b22b, type: 3}
+    volume: 0.9
+    randomPitch: 1
+    spatialBlend: 0.4
+    cooldown: 0
+  - id: 10
+    clips:
+    - {fileID: 8300000, guid: e38e88a757a024b8680cf8bd34cea713, type: 3}
+    volume: 1
+    randomPitch: 0
+    spatialBlend: 0
+    cooldown: 0.5
+  - id: 11
+    clips:
+    - {fileID: 8300000, guid: 270c8043c5c564c7e925e90d80bf4206, type: 3}
+    - {fileID: 8300000, guid: dd73fcd58bca941d8b8722c460ea1338, type: 3}
+    volume: 0.6
+    randomPitch: 1
+    spatialBlend: 0
+    cooldown: 0.03
+  - id: 12
+    clips:
+    - {fileID: 8300000, guid: cf24036bb410549fb8daad25f16c507d, type: 3}
+    volume: 0.9
+    randomPitch: 0
+    spatialBlend: 0
+    cooldown: 0.5
+  - id: 13
+    clips:
+    - {fileID: 8300000, guid: e7607113e27ef470983f5a2c87a6c8b9, type: 3}
+    volume: 0.9
+    randomPitch: 0
+    spatialBlend: 0
+    cooldown: 0.5
+  - id: 14
+    clips:
+    - {fileID: 8300000, guid: c655acc7ab0b6458784190d47947ad17, type: 3}
+    volume: 0.8
+    randomPitch: 0
+    spatialBlend: 0
+    cooldown: 0.5
