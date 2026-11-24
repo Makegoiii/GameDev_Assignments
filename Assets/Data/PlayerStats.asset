@@ -22,7 +22,7 @@ MonoBehaviour:
   invincibleTime: 2
   invincibleBlink: 0.2
   gameOverDelay: 2
-  shootCooldown: 0.3
+  shootCooldown: 0.12
   bulletSpeed: 12
   bulletLifetime: 3
   bulletDamage: 1
