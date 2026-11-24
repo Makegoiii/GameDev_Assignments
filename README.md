@@ -1,4 +1,4 @@
-# Coin Quest 3D
+
 
 A 3D mobile platformer (Android / iOS, landscape) made in Unity for
 Game Development Fundamentals, Narxoz University. Weeks 9–13 project (RK2). Assignment 12: full sound pass (see "Sound").
