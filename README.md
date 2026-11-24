@@ -91,8 +91,8 @@ Older hand-made scenes (Level1, Level2, Level3_Enemies, boss Level3) stay in the
 ## Sound (Assignment 12)
 - **AudioMixer** `Assets/Audio/GameMixer.mixer`: Master → MusicBus → **Music**, Master → **SFX**.
   Every AudioSource is routed: music → Music, everything else → SFX.
-- **14 sound events** (`SoundEvent` enum): jump, shoot, hit, player hurt, pickup, heal, **enemy wind-up**,
-  enemy shot, explosion, enemy death, player death, UI click, win, lose.
+- **15 sound events** (`SoundEvent` enum): jump, shoot, hit, player hurt, pickup, heal, **enemy wind-up**,
+  enemy shot, explosion, enemy death, player death, UI click, win, lose, reload.
 - **Enemy wind-up** sound starts in `Telegraph.StartWarning()`, the same frame the red blink starts
   (0.5–0.7 s before the attack lands).
 - **Two music tracks** (menu + level), 1 s equal-power crossfade, one `AudioManager` with `DontDestroyOnLoad`:
@@ -113,7 +113,7 @@ Setup after cloning: **Tools → Assignment 12 → Build Sound Pass** (mixer, So
 | `Assets/universfield-game-bonus-02-294436.mp3` | heal (heart) | Pixabay, "game-bonus-02" by universfield | Pixabay Content License |
 | `Assets/joe_bou_khalil-procedural-sonic-detonation-570270.mp3` | bomb explosion | Pixabay, "procedural-sonic-detonation" by joe_bou_khalil | Pixabay Content License |
 | `Assets/freesound_community-game-start-6104.mp3` | not used any more | Pixabay, "game-start" by freesound_community | Pixabay Content License |
-| `Assets/Audio/SFX/sfx_*.wav` (17 files: jump ×2, shoot ×2, hit ×3, hurt, pickup_2, enemy_windup, enemy_shot, enemy_death, player_death, ui_click ×2, win, lose) | sound effects | synthesised for this project with `Tools/sound_gen/make_sounds.py` (sine/square/saw/noise, no samples) | own work, CC0 |
+| `Assets/Audio/SFX/sfx_*.wav` (18 files: jump ×2, shoot ×2, hit ×3, hurt, pickup_2, enemy_windup, enemy_shot, enemy_death, player_death, ui_click ×2, win, lose, reload) | sound effects | synthesised for this project with `Tools/sound_gen/make_sounds.py` (sine/square/saw/noise, no samples) | own work, CC0 |
 
 ## Other assets and licenses
 - Character and animations: Mixamo (Adobe), free for games.

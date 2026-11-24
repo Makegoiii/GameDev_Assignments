@@ -56,7 +56,7 @@ the pause effect is on Music.
 | PlayerHurt | `Health.TakeDamage` | sfx_hurt | |
 | Pickup | `Movement` coin trigger | coin-pickup.mp3, sfx_pickup_2 | |
 | Heal | `Health.Heal` (heart) | game-bonus-02.mp3 | |
-| **EnemyWindUp** | `Telegraph.StartWarning` | sfx_enemy_windup (0.55 s rising) | same frame as red blink, before the hit |
+| **EnemyWindUp** | `Telegraph.StartWarning` | sfx_enemy_windup (0.4 s rising, once per attack) | same frame as red blink, before the hit |
 | EnemyShot | `EnemyMotion.Fire` | sfx_enemy_shot | 3D 50 % |
 | Explosion | `BombHazard.PlayFx` | detonation.mp3 | |
 | EnemyDeath | `EnemyHealth.Die` | sfx_enemy_death | |
@@ -64,6 +64,7 @@ the pause effect is on Music.
 | UiClick | every Button / Toggle | sfx_ui_click_1/2 | |
 | Win | `LevelRunner.OnExitReached`, `WinScreen.Start` | sfx_win | |
 | Lose | game over, time out, fall | sfx_lose | |
+| Reload | `Shooter.Reload` | sfx_reload | |
 
 Music: menu = `music_menu.wav` (own, CC0), level = `moodmode-that-game-arcade` (Pixabay).
 
