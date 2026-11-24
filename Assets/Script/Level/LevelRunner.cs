@@ -15,9 +15,8 @@ public class LevelRunner : MonoBehaviour
 
     [Header("Text")]
     [SerializeField] string titleFormat = "Level {0}: {1}";
-    [SerializeField] string counterFormat = "Wave {0}/{1}   Enemies: {2}";
+    [SerializeField] string enemiesFormat = "Enemies: {0}";
     [SerializeField] string exitOpenText = "Exit open!";
-    [SerializeField] string waveText = "Wave {0}!";
     [SerializeField] string resultFormat = "Level complete!\nScore {0}{1}";
     [SerializeField] string newBestText = "   NEW BEST!";
 
@@ -27,7 +26,6 @@ public class LevelRunner : MonoBehaviour
     GameConfig config;
     Movement player;
     Transform enemyRoot;
-    int waveIndex;
     int alive;
     int kills;
     bool finished;
@@ -48,10 +46,11 @@ public class LevelRunner : MonoBehaviour
         enemyRoot = new GameObject("Enemies").transform;
         MapBuilder.ApplyTheme(Level.theme);
         MapBuilder.BuildProps(Level, config);
+        MapBuilder.BakeNavMesh(player != null ? player.gameObject : null);
         PlacePlayer();
         SpawnCoins();
         if (exitObject != null) exitObject.SetActive(false);
-        SpawnWave(0);
+        SpawnEnemies();
     }
 
     void Start()
@@ -86,14 +85,14 @@ public class LevelRunner : MonoBehaviour
             Instantiate(config.coinPrefab, p, Quaternion.identity, root);
     }
 
-    void SpawnWave(int index)
+    void SpawnEnemies()
     {
-        waveIndex = index;
         alive = 0;
-        foreach (EnemySpawn s in Level.waves[index].spawns)
-            if (SpawnEnemy(s)) alive++;
+        foreach (EnemyWave wave in Level.waves)
+            foreach (EnemySpawn s in wave.spawns)
+                if (SpawnEnemy(s)) alive++;
         UpdateCounter();
-        if (alive == 0) OnWaveCleared();
+        if (alive == 0) OnAllEnemiesDead();
     }
 
     bool SpawnEnemy(EnemySpawn s)
@@ -119,35 +118,19 @@ public class LevelRunner : MonoBehaviour
         kills++;
         alive = Mathf.Max(0, alive - 1);
         UpdateCounter();
-        if (alive == 0) OnWaveCleared();
+        if (alive == 0) OnAllEnemiesDead();
     }
 
-    void OnWaveCleared()
+    void OnAllEnemiesDead()
     {
-        int next = waveIndex + 1;
-        if (next < Level.waves.Count)
-        {
-            StartCoroutine(NextWaveAfterDelay(next));
-            return;
-        }
         if (exitObject != null) exitObject.SetActive(true);
         UpdateCounter();
-    }
-
-    IEnumerator NextWaveAfterDelay(int next)
-    {
-        ShowMessage(string.Format(waveText, next + 1));
-        yield return new WaitForSeconds(Level.waveDelay);
-        SpawnWave(next);
     }
 
     void UpdateCounter()
     {
         if (counterText == null) return;
-        bool allCleared = alive == 0 && waveIndex >= Level.waves.Count - 1;
-        counterText.text = allCleared
-            ? exitOpenText
-            : string.Format(counterFormat, waveIndex + 1, Level.waves.Count, alive);
+        counterText.text = alive == 0 ? exitOpenText : string.Format(enemiesFormat, alive);
     }
 
     public void OnExitReached()
@@ -155,6 +138,7 @@ public class LevelRunner : MonoBehaviour
         if (finished) return;
         finished = true;
         GetComponent<HazardRain>().Stop();
+        Sfx.Play(SoundEvent.Win);
 
         int score = CalculateScore();
         bool isNewBest = SaveSystem.RecordLevelComplete(Level.levelNumber, score, Level.levelNumber + 1);

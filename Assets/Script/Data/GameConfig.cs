@@ -6,6 +6,7 @@ using UnityEngine;
 public class SettingsDefaults
 {
     [Range(0f, 1f)] public float musicVolume;
+    [Range(0f, 1f)] public float sfxVolume = 1f;
     public bool musicOn;
     public bool fullscreen;
     public string playerName;

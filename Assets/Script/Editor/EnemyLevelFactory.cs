@@ -140,8 +140,6 @@ public static class EnemyLevelFactory
         agent.radius = col.radius;
         agent.height = col.height;
 
-        root.AddComponent<AudioSource>().playOnAwake = false;
-
         EnemySight sight = root.AddComponent<EnemySight>();
         Set(sight, so => so.FindProperty("stats").objectReferenceValue = stats);
 

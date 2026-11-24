@@ -20,6 +20,7 @@ public class SaveData
     public List<LevelRecord> levels = new List<LevelRecord>();
 
     public float musicVol;
+    public float sfxVol;
     public bool musicOn;
     public bool fullscreen;
     public string playerName;
@@ -32,6 +33,7 @@ public class SaveData
             version = CURRENT_VERSION,
             unlocked = new List<int> { FIRST_LEVEL },
             musicVol = d.musicVolume,
+            sfxVol = d.sfxVolume,
             musicOn = d.musicOn,
             fullscreen = d.fullscreen,
             playerName = d.playerName ?? "",

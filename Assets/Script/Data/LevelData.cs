@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum EnemyType { Patroller, Shooter, Rusher }
 
-public enum PropType { Crate, Wall, Barrel, Sandbags }
+public enum PropType { Crate, Wall, Barrel, Sandbags, Tree, Lamp }
 
 [Serializable]
 public class PropPlacement
@@ -24,6 +24,11 @@ public class LevelTheme
     public bool fog;
     public Color fogColor;
     [Min(0f)] public float fogDensity;
+
+    [Header("Map style: colour of floor, outer walls and props")]
+    public Color floorColor = Color.white;
+    public Color wallColor = Color.white;
+    public Color propColor = Color.white;
 }
 
 [Serializable]
@@ -72,6 +77,8 @@ public class LevelData : ScriptableObject
 
     [Header("Layout")]
     public Vector3 playerStart;
+    [Tooltip("Square arena: half of its side. 0 = the old round arena of the scene")]
+    [Min(0f)] public float arenaHalfSize;
     public List<Vector3> coins = new List<Vector3>();
     public List<PropPlacement> props = new List<PropPlacement>();
     public LevelTheme theme = new LevelTheme();

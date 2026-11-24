@@ -7,7 +7,7 @@ public class ProfileSettings : MonoBehaviour
     public Toggle fullscreenToggle;
     public Toggle musicToggle;
     public Slider volumeSlider;
-    public AudioSource bgSound;
+    public Slider sfxSlider;
     public TMP_InputField nameField;
     public TMP_Dropdown colorDropdown;
 
@@ -19,7 +19,7 @@ public class ProfileSettings : MonoBehaviour
         if (fullscreenToggle != null) fullscreenToggle.SetIsOnWithoutNotify(d.fullscreen);
         if (musicToggle != null) musicToggle.SetIsOnWithoutNotify(d.musicOn);
         if (volumeSlider != null) volumeSlider.SetValueWithoutNotify(d.musicVol);
-        SaveSystem.ApplyMusic(bgSound);
+        if (sfxSlider != null) sfxSlider.SetValueWithoutNotify(d.sfxVol);
     }
 
     public void SetFullscreen(bool isOn)
@@ -28,10 +28,14 @@ public class ProfileSettings : MonoBehaviour
         SaveSystem.SetFullscreen(isOn);
     }
 
-    public void SetMusic(bool isOn)
+    public void SetMusic(bool isOn) => SaveSystem.SetMusicOn(isOn);
+
+    public void SetMusicVolume(float value) => SaveSystem.SetMusicVolume(value);
+
+    public void SetSfxVolume(float value)
     {
-        SaveSystem.SetMusicOn(isOn);
-        SaveSystem.ApplyMusic(bgSound);
+        SaveSystem.SetSfxVolume(value);
+        Sfx.Play(SoundEvent.Pickup);
     }
 
     public void SaveName(string value) => SaveSystem.SetPlayerName(value);

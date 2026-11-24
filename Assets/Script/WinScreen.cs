@@ -10,6 +10,7 @@ public class WinScreen : MonoBehaviour
     {
         Time.timeScale = 1f;
         SaveSystem.Save();
+        Sfx.Play(SoundEvent.Win);
         if (bestScoreText != null)
             bestScoreText.text = string.Format(bestScoreFormat, SaveSystem.Data.bestScore);
     }

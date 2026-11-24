@@ -2,7 +2,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
-using UnityEngine.EventSystems;
 
 public class Movement : MonoBehaviour
 {
@@ -16,11 +15,9 @@ public class Movement : MonoBehaviour
     public TextMeshProUGUI coinText;
     public TextMeshProUGUI winPanel;
     public TextMeshProUGUI timerText;
-    public AudioSource audioSource;
-    public AudioClip coinSound;
-    public AudioSource bgMusic;
 
     public float messageTime = 2f;
+    const float MOVING_SPEED_PART = 0.3f;
     private Coroutine messageRoutine;
     private Rigidbody rb;
     private int coinsCollected = 0;
@@ -30,8 +27,8 @@ public class Movement : MonoBehaviour
     private bool gameOver = false;
 
     private Vector2 move;
-    private bool fireRequested;
     private Shooter shooter;
+    private PlayerLook look;
     private PlayerStats stats;
 
     public int CoinsCollected => coinsCollected;
@@ -42,6 +39,9 @@ public class Movement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         shooter = GetComponent<Shooter>();
         stats = GameConfig.Instance.player;
+        look = GetComponent<PlayerLook>();
+        if (look == null) look = gameObject.AddComponent<PlayerLook>();
+        rb.interpolation = RigidbodyInterpolation.Interpolate;
     }
 
     void Start()
@@ -55,13 +55,27 @@ public class Movement : MonoBehaviour
             : GameConfig.Instance.fallbackTimeLimit;
         winPanel.text = "";
         ShowCoins();
-
-        SaveSystem.ApplyMusic(bgMusic);
     }
 
-    public void OnMove(InputValue value)
+    public void OnMove(InputValue value) { }
+
+    static Vector2 ReadMove()
     {
-        move = value.Get<Vector2>();
+        Vector2 m = Vector2.zero;
+        Keyboard k = Keyboard.current;
+        if (k != null)
+        {
+            if (k.wKey.isPressed || k.upArrowKey.isPressed) m.y += 1f;
+            if (k.sKey.isPressed || k.downArrowKey.isPressed) m.y -= 1f;
+            if (k.dKey.isPressed || k.rightArrowKey.isPressed) m.x += 1f;
+            if (k.aKey.isPressed || k.leftArrowKey.isPressed) m.x -= 1f;
+        }
+        foreach (Gamepad gp in Gamepad.all)
+        {
+            Vector2 stick = gp.leftStick.ReadValue();
+            if (stick.sqrMagnitude > m.sqrMagnitude) m = stick;
+        }
+        return Vector2.ClampMagnitude(m, 1f);
     }
 
     public void OnJump()
@@ -74,26 +88,17 @@ public class Movement : MonoBehaviour
             v.y = 0f;
             rb.linearVelocity = v;
             rb.AddForce(Vector3.up * stats.jumpImpulse, ForceMode.Impulse);
+            Sfx.Play(SoundEvent.Jump);
         }
     }
 
-    public void OnFire()
-    {
-        if (PauseMenu.IsPaused) return;
-        fireRequested = true;
-    }
-
-    Vector3 Facing()
-    {
-        Vector3 f = rb.rotation * Vector3.forward;
-        f.y = 0f;
-        return f.normalized;
-    }
+    public void OnFire() { }
 
     void Update()
     {
         if (gameOver || PauseMenu.IsPaused) return;
 
+        move = ReadMove();
         grounded = Physics.CheckSphere(feet.position, groundRadius, groundMask);
 
         Vector3 flat = rb.linearVelocity;
@@ -106,40 +111,44 @@ public class Movement : MonoBehaviour
         {
             timeLeft = 0;
             EndGame("Время вышло!");
+            Sfx.Play(SoundEvent.Lose);
             Invoke(nameof(Restart), stats.gameOverDelay);
         }
         timerText.text = "Время: " + Mathf.CeilToInt(timeLeft);
 
         bool fireHeld = false;
         foreach (Gamepad gp in Gamepad.all)
-            if (gp.buttonWest.isPressed) { fireHeld = true; break; }
+            if (gp.buttonWest.isPressed || gp.rightTrigger.isPressed) { fireHeld = true; break; }
 
         if (Keyboard.current != null && Keyboard.current.xKey.isPressed)
             fireHeld = true;
 
-        bool pointerOnUI = EventSystem.current != null
-                           && EventSystem.current.IsPointerOverGameObject();
-        bool clickShot = fireRequested && !pointerOnUI;
-        fireRequested = false;
+        if (Mouse.current != null && Mouse.current.rightButton.isPressed)
+            fireHeld = true;
 
-        if (shooter != null && (fireHeld || clickShot))
-            shooter.Shoot(Facing());
+        if (shooter != null)
+        {
+            shooter.SetMotion(flat.magnitude > stats.moveSpeed * MOVING_SPEED_PART, grounded);
+            if (fireHeld) shooter.TryShoot();
+        }
 
         if (transform.position.y < stats.fallKillY)
+        {
+            Sfx.Play(SoundEvent.Lose);
             Restart();
+        }
     }
 
     void FixedUpdate()
     {
         if (gameOver) return;
 
-        float turn = move.x * stats.turnSpeed * Time.fixedDeltaTime;
-        if (turn != 0f)
-            rb.MoveRotation(rb.rotation * Quaternion.Euler(0f, turn, 0f));
+        Quaternion body = Quaternion.Euler(0f, look.Yaw, 0f);
+        rb.MoveRotation(body);
 
-        float forwardInput = Mathf.Clamp(move.y, -1f, 1f);
-        float speed = forwardInput >= 0f ? stats.moveSpeed : stats.moveSpeed * stats.backwardSpeedFactor;
-        Vector3 target = Facing() * forwardInput * speed;
+        Vector2 input = Vector2.ClampMagnitude(move, 1f);
+        float forwardSpeed = input.y >= 0f ? stats.moveSpeed : stats.moveSpeed * stats.backwardSpeedFactor;
+        Vector3 target = body * new Vector3(input.x * stats.moveSpeed * stats.strafeSpeedFactor, 0f, input.y * forwardSpeed);
         Vector3 current = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         Vector3 horizontal = Vector3.Lerp(current, target, grounded ? 1f : stats.airControl);
 
@@ -155,9 +164,7 @@ public class Movement : MonoBehaviour
             Destroy(other.gameObject);
             coinsCollected++;
             ShowCoins();
-
-            if (audioSource != null && coinSound != null)
-                audioSource.PlayOneShot(coinSound);
+            Sfx.Play(SoundEvent.Pickup);
 
             if (coinsCollected >= totalCoins && gateAnimator != null)
                 gateAnimator.SetBool("Open", true);
@@ -189,6 +196,8 @@ public class Movement : MonoBehaviour
 
         gameOver = true;
         winPanel.text = "Game Over!";
+        Sfx.Play(SoundEvent.PlayerDeath);
+        Sfx.Play(SoundEvent.Lose);
         StopPlayer();
         Invoke(nameof(Restart), stats.gameOverDelay);
     }

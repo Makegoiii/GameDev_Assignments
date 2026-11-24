@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level_02
   m_EditorClassIdentifier: 
   levelNumber: 2
-  title: Market
+  title: Snow Base
   timeLimit: 120
   clearBonus: 400
   waveDelay: 3
@@ -26,37 +26,94 @@ MonoBehaviour:
   - {x: -2, y: 1, z: -3}
   - {x: 2, y: 1, z: -3}
   - {x: 0, y: 1, z: 8}
+  arenaHalfSize: 12.5
   props:
   - type: 1
-    position: {x: -4, y: 0, z: -1}
-    size: {x: 0.6, y: 2.6, z: 6}
+    position: {x: -8, y: 0, z: -1.5}
+    size: {x: 0.4, y: 2.6, z: 1.4}
     yaw: 0
   - type: 1
-    position: {x: 4, y: 0, z: -1}
-    size: {x: 0.6, y: 2.6, z: 6}
+    position: {x: -8, y: 0, z: 2}
+    size: {x: 0.4, y: 2.6, z: 2.4}
+    yaw: 0
+  - type: 1
+    position: {x: -4, y: 0, z: -4}
+    size: {x: 0.4, y: 2.6, z: 8.4}
+    yaw: 0
+  - type: 1
+    position: {x: -4, y: 0, z: 8}
+    size: {x: 0.4, y: 2.6, z: 8.4}
+    yaw: 0
+  - type: 1
+    position: {x: 0, y: 0, z: -11.5}
+    size: {x: 0.4, y: 2.6, z: 1.4}
+    yaw: 0
+  - type: 1
+    position: {x: 0, y: 0, z: -5.5}
+    size: {x: 0.4, y: 2.6, z: 3.4}
+    yaw: 0
+  - type: 1
+    position: {x: 0, y: 0, z: 4.5}
+    size: {x: 0.4, y: 2.6, z: 3.4}
+    yaw: 0
+  - type: 1
+    position: {x: 4, y: 0, z: 6}
+    size: {x: 0.4, y: 2.6, z: 4.4}
+    yaw: 0
+  - type: 1
+    position: {x: 8, y: 0, z: -3.5}
+    size: {x: 0.4, y: 2.6, z: 5.4}
+    yaw: 0
+  - type: 1
+    position: {x: 8, y: 0, z: 10}
+    size: {x: 0.4, y: 2.6, z: 4.4}
+    yaw: 0
+  - type: 1
+    position: {x: -10, y: 0, z: -8}
+    size: {x: 4.4, y: 2.6, z: 0.4}
+    yaw: 0
+  - type: 1
+    position: {x: -5, y: 0, z: -8}
+    size: {x: 2.4, y: 2.6, z: 0.4}
+    yaw: 0
+  - type: 1
+    position: {x: 5, y: 0, z: -8}
+    size: {x: 2.4, y: 2.6, z: 0.4}
+    yaw: 0
+  - type: 1
+    position: {x: 0.5, y: 0, z: -4}
+    size: {x: 1.4, y: 2.6, z: 0.4}
+    yaw: 0
+  - type: 1
+    position: {x: 3.5, y: 0, z: -4}
+    size: {x: 1.4, y: 2.6, z: 0.4}
+    yaw: 0
+  - type: 1
+    position: {x: -4, y: 0, z: 0}
+    size: {x: 6.4, y: 2.6, z: 0.4}
+    yaw: 0
+  - type: 1
+    position: {x: 2.5, y: 0, z: 0}
+    size: {x: 3.4, y: 2.6, z: 0.4}
+    yaw: 0
+  - type: 1
+    position: {x: 8, y: 0, z: 4}
+    size: {x: 8.4, y: 2.6, z: 0.4}
     yaw: 0
   - type: 0
     position: {x: -8, y: 0, z: -6}
     size: {x: 1.4, y: 1.4, z: 1.4}
     yaw: 0
   - type: 0
-    position: {x: -8, y: 1.4, z: -6}
+    position: {x: -8, y: 0, z: -6}
     size: {x: 1.1, y: 1.1, z: 1.1}
     yaw: 20
-  - type: 0
-    position: {x: 8, y: 0, z: -6}
-    size: {x: 1.4, y: 1.4, z: 1.4}
-    yaw: 25
-  - type: 0
-    position: {x: 8, y: 1.4, z: -6}
-    size: {x: 1.1, y: 1.1, z: 1.1}
-    yaw: 45
   - type: 0
     position: {x: -8, y: 0, z: 6}
     size: {x: 1.4, y: 1.4, z: 1.4}
     yaw: 10
   - type: 0
-    position: {x: -8, y: 1.4, z: 6}
+    position: {x: -8, y: 0, z: 6}
     size: {x: 1.1, y: 1.1, z: 1.1}
     yaw: 30
   - type: 0
@@ -64,7 +121,7 @@ MonoBehaviour:
     size: {x: 1.4, y: 1.4, z: 1.4}
     yaw: 0
   - type: 0
-    position: {x: 8, y: 1.4, z: 6}
+    position: {x: 8, y: 0, z: 6}
     size: {x: 1.1, y: 1.1, z: 1.1}
     yaw: 20
   - type: 2
@@ -75,25 +132,20 @@ MonoBehaviour:
     position: {x: 2.2, y: 0, z: 6}
     size: {x: 0.9, y: 1.2, z: 0.9}
     yaw: 0
-  - type: 3
-    position: {x: 0, y: 0, z: -0.6}
-    size: {x: 2.6, y: 0.9, z: 0.7}
+  - type: 4
+    position: {x: -9.3, y: 0, z: 4}
+    size: {x: 1.5, y: 3.6, z: 1.5}
     yaw: 0
-  - type: 3
-    position: {x: -1.6, y: 0, z: 0.9}
-    size: {x: 2, y: 0.9, z: 0.7}
-    yaw: 90
-  - type: 3
-    position: {x: 1.6, y: 0, z: 0.9}
-    size: {x: 2, y: 0.9, z: 0.7}
-    yaw: 90
   theme:
-    sunColor: {r: 1, g: 0.85, b: 0.65, a: 1}
-    sunIntensity: 1.2
-    ambientColor: {r: 0.6, g: 0.5, b: 0.4, a: 1}
+    sunColor: {r: 0.92, g: 0.96, b: 1, a: 1}
+    sunIntensity: 1.5
+    ambientColor: {r: 0.8, g: 0.86, b: 0.95, a: 1}
     fog: 1
-    fogColor: {r: 0.9, g: 0.75, b: 0.55, a: 1}
-    fogDensity: 0.018
+    fogColor: {r: 0.88, g: 0.92, b: 0.98, a: 1}
+    fogDensity: 0.015
+    floorColor: {r: 1.3, g: 1.38, b: 1.5, a: 1}
+    wallColor: {r: 0.9, g: 0.97, b: 1.1, a: 1}
+    propColor: {r: 0.95, g: 1.02, b: 1.15, a: 1}
   waves:
   - spawns:
     - type: 0
@@ -103,36 +155,14 @@ MonoBehaviour:
       - {x: -9, y: 0, z: -3}
       - {x: -9, y: 0, z: 4}
       - {x: -6, y: 0, z: 8}
-    - type: 0
-      position: {x: 9, y: 0, z: -3}
-      yaw: 270
-      route:
-      - {x: 9, y: 0, z: -3}
-      - {x: 9, y: 0, z: 4}
-      - {x: 6, y: 0, z: 8}
     - type: 1
       position: {x: 0, y: 0, z: 1}
       yaw: 180
       route: []
-  - spawns:
     - type: 2
       position: {x: -6, y: 0, z: 8}
       yaw: 135
       route: []
-    - type: 2
-      position: {x: 6, y: 0, z: 8}
-      yaw: 225
-      route: []
-    - type: 1
-      position: {x: 0, y: 0, z: 1}
-      yaw: 180
-      route: []
-    - type: 0
-      position: {x: 0, y: 0, z: -6}
-      yaw: 0
-      route:
-      - {x: -2, y: 0, z: -6}
-      - {x: 2, y: 0, z: -6}
   hazards:
     enabled: 1
     startDelay: 5

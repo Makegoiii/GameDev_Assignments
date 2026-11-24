@@ -6,7 +6,6 @@ public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] EnemyStats stats;
     [SerializeField] float hitFlashTime = 0.08f;
-    [SerializeField] AudioClip hitClip;
 
     public static event Action<EnemyHealth> Died;
 
@@ -38,8 +37,8 @@ public class EnemyHealth : MonoBehaviour
     {
         if (dead) return;
         hp -= dmg;
-        if (hitClip != null) AudioSource.PlayClipAtPoint(hitClip, transform.position);
         if (hp <= 0) { Die(); return; }
+        Sfx.PlayAt(SoundEvent.Hit, transform.position);
         StartCoroutine(HitFlash());
     }
 
@@ -59,6 +58,7 @@ public class EnemyHealth : MonoBehaviour
     void Die()
     {
         dead = true;
+        Sfx.PlayAt(SoundEvent.EnemyDeath, transform.position);
         Died?.Invoke(this);
         Destroy(gameObject);
     }

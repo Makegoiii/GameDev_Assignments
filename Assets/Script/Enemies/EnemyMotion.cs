@@ -25,5 +25,6 @@ public static class EnemyMotion
         if (dir.sqrMagnitude < 0.0001f) return;
         EnemyProjectile p = Object.Instantiate(prefab, from, Quaternion.LookRotation(dir));
         p.Launch(stats.projectileSpeed, stats.damage, stats.projectileLifetime);
+        Sfx.PlayAt(SoundEvent.EnemyShot, from);
     }
 }

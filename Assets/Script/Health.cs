@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,19 +8,16 @@ public class Health : MonoBehaviour
     public int MaxHp => GameConfig.Instance.player.maxHp;
     public int Hp => hp;
 
-    public AudioClip hurtClip;
-    public AudioClip healClip;
+    public static event Action Damaged;
 
     int hp;
     bool invincible;
     Renderer[] renderers;
-    AudioSource src;
 
     void Start()
     {
         hp = MaxHp;
         renderers = GetComponentsInChildren<Renderer>();
-        src = GetComponent<AudioSource>();
         Debug.Log("HP: " + hp);
     }
 
@@ -29,13 +27,14 @@ public class Health : MonoBehaviour
 
         hp -= dmg;
         Debug.Log("OUCH! HP: " + hp);
-        if (src != null && hurtClip != null) src.PlayOneShot(hurtClip);
 
         if (hp <= 0)
         {
             GameOver();
             return;
         }
+        Sfx.Play(SoundEvent.PlayerHurt);
+        Damaged?.Invoke();
         StartCoroutine(Invincibility());
     }
 
@@ -43,7 +42,7 @@ public class Health : MonoBehaviour
     {
         hp = Mathf.Min(hp + amount, MaxHp);
         Debug.Log("HEAL! HP: " + hp);
-        if (src != null && healClip != null) src.PlayOneShot(healClip);
+        Sfx.Play(SoundEvent.Heal);
     }
 
     IEnumerator Invincibility()
@@ -71,6 +70,8 @@ public class Health : MonoBehaviour
     void GameOver()
     {
         Debug.Log("GAME OVER");
+        Sfx.Play(SoundEvent.PlayerDeath);
+        Sfx.Play(SoundEvent.Lose);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
